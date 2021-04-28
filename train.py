@@ -44,7 +44,7 @@ def main():
     plt.savefig('loss.png')
 
     print('Test performance: accuracy={0}, loss={1}'.format(acc, score))
-    model.save('cuda.h5')
+    model.save('model.h5')
 
 
 if __name__ == '__main__':
