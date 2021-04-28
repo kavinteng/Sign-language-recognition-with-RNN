@@ -5,10 +5,8 @@ import argparse
 
 def main():
     comp='bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 --action_env PYTHON_BIN_PATH="C:/Users/Asus/AppData/Local/Programs/Python/Python37/python.exe" mediapipe/examples/desktop/multi_hand_tracking:multi_hand_tracking_cpu'
-    #명령어 컴파일
     os.system('set GLOG_logtostderr=1')
     cmd='bazel-bin\mediapipe\examples\desktop\hand_tracking\hand_tracking_cpu  --calculator_graph_config_file=mediapipe/graphs/hand_tracking/hand_tracking_desktop_live.pbtxt'
-    #미디어 파이프 명령어 저장listfile
     input_data_path = '/Project/mediapipe/testthai/'
     output_data_path = '/Project/mediapipe/testthaiout/'
     listfile=os.listdir(input_data_path)
@@ -17,12 +15,10 @@ def main():
     if not(os.path.isdir(output_data_path+"Absolute/")):
         os.mkdir(output_data_path+"Absolute/")
     for file in listfile:
-        #해당 디렉토리의 하위 디렉토리 폴더명을 찾음
-        if not(os.path.isdir(input_data_path+file)): #ignore .DS_Store
+        if not(os.path.isdir(input_data_path+file)):
             continue
         word = file+"/"
         fullfilename=os.listdir(input_data_path+word)
-        # 하위디렉토리의 모든 비디오들의 이름을 저장
         if not(os.path.isdir(output_data_path+"_"+word)):
             os.mkdir(output_data_path+"_"+word)
         if not(os.path.isdir(output_data_path+"Relative/"+word)):
@@ -46,5 +42,4 @@ if __name__ == "__main__":
     args=parser.parse_args()
     input_data_path=args.input_data_path
     output_data_path=args.output_data_path
-    #print(input_data_path)
     main()
