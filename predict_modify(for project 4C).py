@@ -32,15 +32,15 @@ def load_data(dirname):
                 numbers = [float(num) for num in t.read().split()]
                 # print(len(numbers))
                 for i in range(len(numbers),25200):
-                    numbers.extend([0.000]) #300 frame 고정
+                    numbers.extend([0.000])
             landmark_frame=[]
             row=0
-            for i in range(0,70):#총 100프레임으로 고
+            for i in range(0,70):
                 landmark_frame.extend(numbers[row:row+84])
                 row += 84
             landmark_frame=np.array(landmark_frame)
             # print(landmark_frame)
-            landmark_frame=landmark_frame.reshape(-1,84)#2차원으로 변환(260*42)
+            landmark_frame=landmark_frame.reshape(-1,84)
             X.append(np.array(landmark_frame))
             Y.append(wordname)
     X=np.array(X)
@@ -51,7 +51,6 @@ def load_data(dirname):
     return x_train,Y
 
 
-#prediction
 def load_label():
     listfile=[]
     with open("label.txt",mode='r', encoding="utf-8") as l:
@@ -126,10 +125,8 @@ def opencap():
 
 def predict():
     comp = 'bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 --action_env PYTHON_BIN_PATH="C:/Users/Asus/AppData/Local/Programs/Python/Python37/python.exe" mediapipe/examples/desktop/hand_tracking:hand_tracking_cpu'
-    # 명령어 컴파일
     os.system('set GLOG_logtostderr=1')
     cmd = 'bazel-bin\mediapipe\examples\desktop\hand_tracking\hand_tracking_cpu  --calculator_graph_config_file=mediapipe/graphs/hand_tracking/hand_tracking_desktop_live.pbtxt'
-    # 미디어 파이프 명령어 저장
     input_data_path = '/Users/user/mediapipe/test/' # ไฟล์ที่ได้จากกล้อง
     output_data_path = '/Users/user/mediapipe/testout/' #ไฟล์ที่จะเอาออก
     listfile = os.listdir(input_data_path)
@@ -138,11 +135,10 @@ def predict():
     output_dir = ""
     filel = []
     for file in listfile:
-        if not (os.path.isdir(input_data_path + file)):  # ignore .DS_Store
+        if not (os.path.isdir(input_data_path + file)):
             continue
         word = file + "/"
         fullfilename = os.listdir(input_data_path + word)
-        # 하위디렉토리의 모든 비디오들의 이름을 저장
         if not (os.path.isdir(output_data_path + "_" + word)):
             os.mkdir(output_data_path + "_" + word)
         if not (os.path.isdir(output_data_path + "Absolute/" + word)):
@@ -157,15 +153,12 @@ def predict():
             outputfilen = '   --output_video_path=' + output_data_path + '_' + word + mp4list
             cmdret = cmd + inputfilen + outputfilen
             os.system(cmdret)
-    # mediapipe동작 작동 종료:
     output_dir = '/Users/user/mediapipe/testout/Absolute'
     x_test, Y = load_data(output_dir)
     new_model = tf.keras.models.load_model('model.h5')
     # new_model.summary()
 
     labels = load_label()
-
-    # 모델 사용
 
     xhat = x_test
     yhat = new_model.predict(xhat)
